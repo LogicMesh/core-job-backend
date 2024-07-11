@@ -1,0 +1,35 @@
+version: '3.8'
+
+networks:
+  slinkyy-app-backend-network:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:
+
+services:
+  # Elasticsearch -------------------------------
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    environment:
+      - discovery.type=single-node
+      - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m' # 1GB of memory allocated to JVM  heap size
+    ports:
+      - '9200:9200' # HTTP port
+      - '9300:9300' # TCP port
+    networks:
+      - slinkyy-app-backend-network
+    volumes:
+      - elasticsearch-data:/var/lib/elasticsearch
+
+  # Kibana -----------------------------------
+  kibana:
+    image: kibana:7.9.2
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    ports:
+      - '5601:5601' # HTTP port
+    networks:
+      - slinkyy-app-backend-network
+    depends_on:
+      - elasticsearch

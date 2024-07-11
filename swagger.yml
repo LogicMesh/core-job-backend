@@ -1,0 +1,598 @@
+openapi: 3.0.0
+info:
+  title: Slinkyy core Job and Task service API
+  version: 1.0.0
+  description: This two services is responsible for managing Job and Task related operations.
+  contact:
+    name: Fidox.io
+    email: example@gmail.com
+servers:
+  - url: http://localhost:4000/v1
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+tags:
+  - name: Job
+    description: Operations related to Job management
+  - name: Task
+    description: Operations related to Task management
+paths:
+  '/jobs':
+    post:
+      operationId: createJob
+      security:
+        - bearerAuth: []
+      summary: Create a new job
+      description: Creates a new job with the given details.
+      tags: [Job]
+      requestBody:
+        description: Job object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    workflow:
+                      type: number
+                      example: 1
+                    validUntil:
+                      type: number
+                      example: 60
+                    language:
+                      type: string
+                      enum:
+                        - en
+                        - ar
+                      default: en
+                      example: enlish language
+                    externalRefNumber:
+                      type: string
+                      nullable: true
+                      example: 'EXT123456'
+                    customer:
+                      type: object
+                      nullable: true
+                      properties:
+                        name:
+                          type: string
+                          nullable: true
+                          example: Ali Akkas
+                        mobile:
+                          type: string
+                          nullable: true
+                          example: '+1234567890'
+                        email:
+                          type: string
+                          nullable: true
+                          example: john.doe@example.com
+                        customerID:
+                          type: string
+                          nullable: true
+                          example: 'CUST123456'
+                    input:
+                      type: array
+                      nullable: true
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                            example: 'some_key'
+                          value:
+                            type: string
+                            example: 'some_value'
+                          type:
+                            type: string
+                            example: 'string'
+                          media:
+                            type: string
+                            nullable: true
+                            example: 'some_media'
+                          description:
+                            type: string
+                            nullable: true
+                            example: 'Some description'
+                  required:
+                    - workflow
+                - $ref: '#/components/schemas/metaData'
+
+      responses:
+        '201':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobKey:
+                    type: string
+                    example: d5888fa44c
+                  accessPINCode:
+                    type: string
+                    example: '1234'
+                  customerAccessURL:
+                    type: string
+                    format: url
+                    example: https://launchpad.example.com
+                  notificationStatus:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                        example: 75
+                      whatsapp:
+                        type: string
+                        example: SENT
+                      sms:
+                        type: string
+                        example: SENT
+                      email:
+                        type: string
+                        example: SENT
+                      whatsappMessage:
+                        type: string
+                        example: whatsapp notification SENT
+                      smsMessage:
+                        type: string
+                        example: whatsapp notification SENT
+                      emailMessage:
+                        type: string
+                        example: whatsapp notification SENT
+                  loginCodeNotificationStatus:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                        example: 75
+                      whatsapp:
+                        type: string
+                        example: SENT
+                      sms:
+                        type: string
+                        example: SENT
+                      email:
+                        type: string
+                        example: SENT
+                      whatsappMessage:
+                        type: string
+                        example: whatsapp notification SENT
+                      smsMessage:
+                        type: string
+                        example: whatsapp notification SENT
+                      emailMessage:
+                        type: string
+                        example: whatsapp notification SENT
+
+  '/jobs/{id}/cancel':
+    post:
+      operationId: cancelJob
+      security:
+        - bearerAuth: []
+      summary: Cancel Job by id
+      description: Cancel Job API [id]
+      tags: [Job]
+      parameters:
+        - $ref: '#/components/parameters/idPathParam'
+      requestBody:
+        description: Meta data from user request [optional]
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/metaData'
+
+      responses:
+        '200':
+          description: Job Canceled succussfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Job cancelled successfully
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/jobs/{jobKey}/start':
+    post:
+      operationId: startJob
+      security:
+        - bearerAuth: []
+      summary: Start Job by Job Key and Access Key
+      description: Start Job API [jobKey] & [accessKey?]
+      tags: [Job]
+      parameters:
+        - $ref: '#/components/parameters/jobKeyPathParam'
+      requestBody:
+        description: Meta data from user request [optional]
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    inputLoginCode:
+                      type: string
+                      example: '4615'
+                - $ref: '#/components/schemas/metaData'
+
+      responses:
+        '302':
+          $ref: '#/components/responses/302'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/tasks/{taskKey}/start':
+    post:
+      operationId: startTask
+      security:
+        - bearerAuth: []
+      summary: Start Task by Task Key
+      description: Start Task API [taskKey]
+      tags: [Task]
+      parameters:
+        - $ref: '#/components/parameters/taskKeyPathParam'
+      requestBody:
+        description: Meta data from user request [optional]
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/metaData'
+
+      responses:
+        '200':
+          description: Task Started succussfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Task Started succussfully
+                  data:
+                    type: object
+                    properties:
+                      config:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                              example: powerLink key
+                            value:
+                              type: string
+                              example: defaultValue
+                            type:
+                              type: string
+                              enum:
+                                - TEXT
+                                - LIST
+                                - MULTI
+                              example: TEXT
+                            description:
+                              type: string
+                              example: task description
+                          required:
+                            - key
+
+                      input:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                              example: input 1
+                            value:
+                              type: string
+                              example: value1 for Input
+                            type:
+                              type: string
+                              enum:
+                                - TEXT
+                                - LIST
+                                - MULTI
+                                - MEDIA
+                              example: TEXT
+                            description:
+                              type: string
+                              example: First input description
+                          required:
+                            - key
+
+        '302':
+          $ref: '#/components/responses/302'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/tasks/{taskKey}/submit':
+    post:
+      operationId: submitTask
+      security:
+        - bearerAuth: []
+      summary: Submit Task by Task Key
+      description: Submit Task API [taskKey]
+      tags: [Task]
+      parameters:
+        - $ref: '#/components/parameters/taskKeyPathParam'
+      requestBody:
+        description: Meta data from user request [optional]
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    output:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                            example: output 1
+                          value:
+                            type: string
+                            example: value1 for output data
+                          type:
+                            type: string
+                            enum:
+                              - TEXT
+                              - LIST
+                              - MULTI
+                              - MEDIA
+                            example: TEXT
+                          description:
+                            type: string
+                            example: First output description
+                        required:
+                          - key
+
+                - $ref: '#/components/schemas/metaData'
+
+      responses:
+        '302':
+          $ref: '#/components/responses/302'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/tasks/{taskKey}/reject':
+    post:
+      operationId: rejectTask
+      security:
+        - bearerAuth: []
+      summary: Reject Task by Task Key
+      description: Reject Task API [taskKey]
+      tags: [Task]
+      parameters:
+        - $ref: '#/components/parameters/taskKeyPathParam'
+      requestBody:
+        description: Meta data from user request [optional]
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    reason:
+                      type: string
+                      example: Reason for task rejection
+                - $ref: '#/components/schemas/metaData'
+
+      responses:
+        '302':
+          $ref: '#/components/responses/302'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    metaData:
+      type: object
+      properties:
+        metadata:
+          type: string
+          example: 'Example Meta Data'
+
+  parameters:
+    idPathParam:
+      name: id
+      in: path
+      description: The Job ID
+      required: true
+      schema:
+        type: integer
+        example: 75
+
+    jobKeyPathParam:
+      name: jobKey
+      in: path
+      description: The Job Key
+      required: true
+      schema:
+        type: string
+        example: 9d953943p
+
+    taskKeyPathParam:
+      name: taskKey
+      in: path
+      description: The Task Key
+      required: true
+      schema:
+        type: string
+        example: 5f953943q
+
+  responses:
+    '500':
+      description: 'Internal Server Error'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error!
+              message:
+                type: string
+                example: We are sorry for the inconvenience. Please try again later...
+    '400':
+      description: 'Bad Request'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: status field's value
+                    message:
+                      type: string
+                      example: Invalid field's value
+                    in:
+                      type: string
+                      enum: [query, body]
+                      example: body
+    '401':
+      description: 'Unauthorized'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+              message:
+                type: string
+                example: You are not authorized to access this resource!
+    '403':
+      description: 'Forbidden'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 403
+              error:
+                type: string
+                example: Please check the source url and try again later
+              message:
+                type: string
+                example: Invalid calling source URL
+    '404':
+      description: 'Job Not Found'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Please check the job ID and try again later
+              message:
+                type: string
+                example: Job not found!
+    '302':
+      description: Redirect based on request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 302
+              message:
+                type: string
+                example: Redirecting to specified URL
+              redirectURL:
+                type: string
+                format: url
+                example: https://launchpad.example.com

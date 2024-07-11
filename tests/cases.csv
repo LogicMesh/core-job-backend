@@ -1,0 +1,175 @@
+testCaseName,workflowID,customerTag,expectedStatus,expectedMessage
+TestCase: Workflow does not exist,155,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",404,Workflow not found!
+TestCase: Workflow exist but not active,2,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,Workflow is not active!
+TestCase: Workflow exist but has no tasks defined,3,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,Workflow has no defined tasks!
+TestCase: Workflow includes task of InActive application,4,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,Application is not active!
+TestCase: Workflow includes task of InActive powerLink,5,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,powerLink is not active!
+TestCase: Workflow includes task of invalid license powerLink,6,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,No License found for the requested powerLink!
+TestCase: Workflow includes task of expired license powerLink,7,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,License expired for the requested powerLink!
+TestCase: Workflow includes task of No Enough QUOTA license powerLink,8,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",400,No enough quota license for the requested powerLink!
+TestRun - All Good Workflow / No Notifications,1,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - Email Notification Required and Customer Profile Complete and includes Email Value,9,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - Email Notification Required and Customer Profile Missing Email Value,9,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": """",
+            ""customerID"": ""CUST123""
+        },",406,Insufficient customer information for email notifications
+TestCase: Workflow - Email Notification Required and Customer Profile Missing Email Tag,9,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""customerID"": ""CUST123""
+        },",406,Insufficient customer information for email notifications
+TestCase: Workflow - Email Notification Required and Missing Entire Customer Profile Tag,9,,406,Insufficient customer information for email notifications
+TestCase: Workflow - Email Notification Not Required and Customer Profile includes Email Value,10,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - Email Notification Not Required and Customer Profile Missing Email Value,10,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": """",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - Email Notification Not Required and Customer Profile Missing Email Tag,10,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - Email Notification Not Required and Missing Entire Customer Profile Tag,10,,201,Job created successfully
+TestCase: Workflow - SMS Notification Required and Customer Profile Complete and includes Mobile Value,11,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""33333"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - SMS Notification Required and Customer Profile Missing Mobile Value,11,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": """",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",406,Insufficient customer information for mobile notifications
+TestCase: Workflow - SMS Notification Required and Customer Profile Missing Mobile Tag,11,"""customer"": {
+            ""name"": ""Ayman"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",406,Insufficient customer information for mobile notifications
+TestCase: Workflow - Email Notification Required and Missing Entire Customer Profile Tag,11,,406,Insufficient customer information for mobile notifications
+TestCase: Workflow - SMS Notification Not Required and Customer Profile includes Mobile Value,12,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""33333"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - SMS Notification Not Required and Customer Profile Missing Mobile Value,12,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": """",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - SMS Notification Not Required and Customer Profile Missing Mobile Tag,12,"""customer"": {
+            ""name"": ""Ayman"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - SMS Notification Not Required and Missing Entire Customer Profile Tag,12,,201,Job created successfully
+TestCase: Workflow - WhatsApp Notification Required and Customer Profile Complete and includes Mobile Value,13,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""33333"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - WhatsApp Notification Required and Customer Profile Missing Mobile Value,13,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": """",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",406,Insufficient customer information for mobile notifications
+TestCase: Workflow - WhatsApp Notification Required and Customer Profile Missing Mobile Tag,13,"""customer"": {
+            ""name"": ""Ayman"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",406,Insufficient customer information for mobile notifications
+TestCase: Workflow - WhatsApp Notification Required and Missing Entire Customer Profile Tag,13,,406,Insufficient customer information for mobile notifications
+TestCase: Workflow - WhatsApp Notification Not Required and Customer Profile includes Mobile Value,14,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""33333"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - WhatsApp Notification Not Required and Customer Profile Missing Mobile Value,14,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": """",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - WhatsApp Notification Not Required and Customer Profile Missing Mobile Tag,14,"""customer"": {
+            ""name"": ""Ayman"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Workflow - WhatsApp Notification Not Required and Missing Entire Customer Profile Tag,14,,201,Job created successfully
+TestCase: Job - No Login Required,15,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
+TestCase: Job - Requires Login and loginType is PINCode,16,"""customer"": {
+            ""name"": ""Ayman"",
+            ""mobile"": ""eeeee"",
+            ""email"": ""aa@ss.com"",
+            ""customerID"": ""CUST123""
+        },",201,Job created successfully
